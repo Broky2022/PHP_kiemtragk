@@ -35,7 +35,7 @@ class HocPhanController {
             $maSV = $_SESSION['user_id'];
 
             // Kiểm tra xem sinh viên đã đăng ký học phần này chưa
-            if ($this->dangKyModel->checkExistingDangKy($maSV, $maHP)) {
+            if ($this->dangKyModel->checkDaDangKy($maSV, $maHP)) {
                 $_SESSION['message'] = 'Bạn đã đăng ký học phần này rồi!';
                 $_SESSION['message_type'] = 'warning';
                 header('Location: index.php?controller=hocphan&action=index');
@@ -43,8 +43,7 @@ class HocPhanController {
             }
 
             // Tạo đăng ký mới
-            $maDK = $this->dangKyModel->createDangKy($maSV);
-            if ($maDK && $this->dangKyModel->addChiTietDangKy($maDK, $maHP)) {
+            if ($this->dangKyModel->dangKyHocPhan($maSV, $maHP)) {
                 $_SESSION['message'] = 'Đăng ký học phần thành công!';
                 $_SESSION['message_type'] = 'success';
             } else {
@@ -70,6 +69,58 @@ class HocPhanController {
         $tongTinChi = $this->dangKyModel->getTongTinChi($maSV);
         
         require_once 'views/hocphan/dangkyhocphan.php';
+    }
+
+    public function huydangky() {
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION['message'] = 'Vui lòng đăng nhập để hủy đăng ký!';
+            $_SESSION['message_type'] = 'warning';
+            header('Location: index.php?controller=auth&action=showLoginForm');
+            exit;
+        }
+
+        if (isset($_GET['id'])) {
+            $maDK = $_GET['id'];
+            $maSV = $_SESSION['user_id'];
+
+            // Kiểm tra xem đăng ký có thuộc về sinh viên này không
+            if (!$this->dangKyModel->checkDangKyBelongsToSinhVien($maDK, $maSV)) {
+                $_SESSION['message'] = 'Bạn không có quyền hủy đăng ký này!';
+                $_SESSION['message_type'] = 'danger';
+            } else {
+                if ($this->dangKyModel->huyDangKy($maDK)) {
+                    $_SESSION['message'] = 'Hủy đăng ký học phần thành công!';
+                    $_SESSION['message_type'] = 'success';
+                } else {
+                    $_SESSION['message'] = 'Có lỗi xảy ra khi hủy đăng ký học phần!';
+                    $_SESSION['message_type'] = 'danger';
+                }
+            }
+        }
+        
+        header('Location: index.php?controller=hocphan&action=dangkyhocphan');
+        exit;
+    }
+
+    public function xoatatca() {
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION['message'] = 'Vui lòng đăng nhập để xóa đăng ký!';
+            $_SESSION['message_type'] = 'warning';
+            header('Location: index.php?controller=auth&action=showLoginForm');
+            exit;
+        }
+
+        $maSV = $_SESSION['user_id'];
+        if ($this->dangKyModel->xoaTatCaDangKy($maSV)) {
+            $_SESSION['message'] = 'Đã xóa tất cả học phần đã đăng ký!';
+            $_SESSION['message_type'] = 'success';
+        } else {
+            $_SESSION['message'] = 'Có lỗi xảy ra khi xóa đăng ký học phần!';
+            $_SESSION['message_type'] = 'danger';
+        }
+        
+        header('Location: index.php?controller=hocphan&action=dangkyhocphan');
+        exit;
     }
 
     public function create() {

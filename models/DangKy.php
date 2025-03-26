@@ -136,5 +136,38 @@ class DangKy {
             return false;
         }
     }
+
+    public function xoaTatCaDangKy($maSV) {
+        $this->db->begin_transaction();
+        try {
+            // Lấy tất cả MaDK của sinh viên
+            $query1 = "SELECT MaDK FROM DangKy WHERE MaSV = ?";
+            $stmt1 = $this->db->prepare($query1);
+            $stmt1->bind_param("s", $maSV);
+            $stmt1->execute();
+            $result = $stmt1->get_result();
+            
+            // Xóa tất cả chi tiết đăng ký
+            while ($row = $result->fetch_assoc()) {
+                $maDK = $row['MaDK'];
+                $query2 = "DELETE FROM ChiTietDangKy WHERE MaDK = ?";
+                $stmt2 = $this->db->prepare($query2);
+                $stmt2->bind_param("i", $maDK);
+                $stmt2->execute();
+            }
+            
+            // Xóa tất cả đăng ký
+            $query3 = "DELETE FROM DangKy WHERE MaSV = ?";
+            $stmt3 = $this->db->prepare($query3);
+            $stmt3->bind_param("s", $maSV);
+            $stmt3->execute();
+            
+            $this->db->commit();
+            return true;
+        } catch (Exception $e) {
+            $this->db->rollback();
+            return false;
+        }
+    }
 }
 ?> 

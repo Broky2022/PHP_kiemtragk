@@ -4,8 +4,15 @@ include 'views/shares/header.php';
 
 <div class="container mt-4">
     <div class="card">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h2>Danh sách học phần đã đăng ký</h2>
+            <?php if (isset($dangKyList) && !empty($dangKyList)): ?>
+                <a href="index.php?controller=hocphan&action=xoatatca" 
+                   class="btn btn-danger"
+                   onclick="return confirm('Bạn có chắc chắn muốn xóa tất cả học phần đã đăng ký?')">
+                    <i class="bi bi-trash"></i> Xóa tất cả
+                </a>
+            <?php endif; ?>
         </div>
         <div class="card-body">
             <?php if (isset($_SESSION['message'])): ?>
@@ -24,6 +31,7 @@ include 'views/shares/header.php';
                     <table class="table table-striped table-hover">
                         <thead class="table-dark">
                             <tr>
+                                <th>STT</th>
                                 <th>Mã học phần</th>
                                 <th>Tên học phần</th>
                                 <th>Số tín chỉ</th>
@@ -32,27 +40,33 @@ include 'views/shares/header.php';
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($dangKyList as $dk): ?>
+                            <?php 
+                            $stt = 1;
+                            foreach ($dangKyList as $dk): 
+                            ?>
                                 <tr>
+                                    <td><?php echo $stt++; ?></td>
                                     <td><?php echo htmlspecialchars($dk['MaHP']); ?></td>
                                     <td><?php echo htmlspecialchars($dk['TenHP']); ?></td>
                                     <td><?php echo htmlspecialchars($dk['SoTinChi']); ?></td>
                                     <td><?php echo date('d/m/Y', strtotime($dk['NgayDK'])); ?></td>
                                     <td>
-                                        <a href="index.php?controller=dangky&action=huy&id=<?php echo $dk['MaDK']; ?>" 
+                                        <a href="index.php?controller=hocphan&action=huydangky&id=<?php echo $dk['MaDK']; ?>" 
                                            class="btn btn-danger btn-sm"
                                            onclick="return confirm('Bạn có chắc chắn muốn hủy đăng ký học phần này?')">
-                                            Hủy đăng ký
+                                            <i class="bi bi-trash"></i> Hủy đăng ký
                                         </a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
+                        <tfoot>
+                            <tr class="table-info">
+                                <td colspan="3"><strong>Tổng số tín chỉ:</strong></td>
+                                <td colspan="3"><strong><?php echo $tongTinChi; ?></strong></td>
+                            </tr>
+                        </tfoot>
                     </table>
-                </div>
-
-                <div class="mt-3">
-                    <p><strong>Tổng số tín chỉ đã đăng ký:</strong> <?php echo $tongTinChi; ?></p>
                 </div>
             <?php else: ?>
                 <div class="alert alert-info">
