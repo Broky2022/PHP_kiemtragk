@@ -1,5 +1,5 @@
 # Hệ thống Quản lý Sinh viên và Đăng ký Học phần
-## Tự chấm điểm: 7
+## Tự chấm điểm: 8
 
 Hệ thống quản lý sinh viên và đăng ký học phần được xây dựng bằng PHP theo mô hình MVC.
 
@@ -15,6 +15,8 @@ Hệ thống quản lý sinh viên và đăng ký học phần được xây d�
 2. Quản lý học phần
    - Xem danh sách học phần
    - Đăng ký học phần
+   - Xóa một học phần
+   - Xóa tất cả học phần
 
 3. Hệ thống xác thực
    - Đăng nhập
@@ -68,7 +70,3 @@ git clone https://github.com/Broky2022/PHP_kiemtragk.git
 
 4. Phân quyền
 - Đảm bảo thư mục img có quyền ghi
-
-## Tác giả
-
-- Broky2022
