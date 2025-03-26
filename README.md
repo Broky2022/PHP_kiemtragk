@@ -1,4 +1,5 @@
 # Hệ thống Quản lý Sinh viên và Đăng ký Học phần
+## Tự chấm điểm: 7
 
 Hệ thống quản lý sinh viên và đăng ký học phần được xây dựng bằng PHP theo mô hình MVC.
 
