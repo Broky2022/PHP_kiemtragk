@@ -1,0 +1,22 @@
+# IDE và Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# File cấu hình
+config.php
+
+# Thư mục upload
+img/*
+!img/.gitkeep
+
+# File logs
+*.log
+
+# Cache files
+*.cache
+
+# Environment files
+.env
+.env.local 
