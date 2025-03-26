@@ -55,5 +55,78 @@ class HocPhanController {
             exit;
         }
     }
+
+    public function dangkyhocphan() {
+        // Kiểm tra đăng nhập
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION['message'] = 'Vui lòng đăng nhập để xem danh sách đăng ký!';
+            $_SESSION['message_type'] = 'warning';
+            header('Location: index.php?controller=auth&action=showLoginForm');
+            exit;
+        }
+
+        $maSV = $_SESSION['user_id'];
+        $dangKyList = $this->dangKyModel->getDangKyByMaSV($maSV);
+        $tongTinChi = $this->dangKyModel->getTongTinChi($maSV);
+        
+        require_once 'views/hocphan/dangkyhocphan.php';
+    }
+
+    public function create() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $maHP = $_POST['maHP'];
+            $tenHP = $_POST['tenHP'];
+            $soTinChi = $_POST['soTinChi'];
+
+            if ($this->hocPhanModel->addHocPhan($maHP, $tenHP, $soTinChi)) {
+                $_SESSION['message'] = 'Thêm học phần thành công!';
+                $_SESSION['message_type'] = 'success';
+            } else {
+                $_SESSION['message'] = 'Có lỗi xảy ra khi thêm học phần!';
+                $_SESSION['message_type'] = 'danger';
+            }
+            header('Location: index.php?controller=hocphan&action=index');
+            exit;
+        }
+        require_once 'views/hocphan/create.php';
+    }
+
+    public function edit($maHP) {
+        $hocphan = $this->hocPhanModel->getHocPhanById($maHP);
+        if (!$hocphan) {
+            $_SESSION['message'] = 'Không tìm thấy học phần!';
+            $_SESSION['message_type'] = 'danger';
+            header('Location: index.php?controller=hocphan&action=index');
+            exit;
+        }
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $tenHP = $_POST['tenHP'];
+            $soTinChi = $_POST['soTinChi'];
+
+            if ($this->hocPhanModel->updateHocPhan($maHP, $tenHP, $soTinChi)) {
+                $_SESSION['message'] = 'Cập nhật học phần thành công!';
+                $_SESSION['message_type'] = 'success';
+            } else {
+                $_SESSION['message'] = 'Có lỗi xảy ra khi cập nhật học phần!';
+                $_SESSION['message_type'] = 'danger';
+            }
+            header('Location: index.php?controller=hocphan&action=index');
+            exit;
+        }
+        require_once 'views/hocphan/edit.php';
+    }
+
+    public function delete($maHP) {
+        if ($this->hocPhanModel->deleteHocPhan($maHP)) {
+            $_SESSION['message'] = 'Xóa học phần thành công!';
+            $_SESSION['message_type'] = 'success';
+        } else {
+            $_SESSION['message'] = 'Có lỗi xảy ra khi xóa học phần!';
+            $_SESSION['message_type'] = 'danger';
+        }
+        header('Location: index.php?controller=hocphan&action=index');
+        exit;
+    }
 }
 ?> 

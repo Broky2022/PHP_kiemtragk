@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý sinh viên</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -26,13 +27,13 @@
                 <ul class="navbar-nav">
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="index.php?controller=dangky&action=index">
-                                <i class="bi bi-journal-check"></i> Đăng ký học phần
+                            <a class="nav-link" href="index.php?controller=hocphan&action=dangkyhocphan">
+                                <i class="bi bi-journal-check"></i> Học phần đã đăng ký
                             </a>
                         </li>
                         <li class="nav-item">
                             <span class="nav-link text-light">
-                                Xin chào, <?php echo htmlspecialchars($_SESSION['user_name'] ?? ''); ?>
+                                <i class="bi bi-person"></i> <?php echo htmlspecialchars($_SESSION['user_name'] ?? ''); ?>
                             </span>
                         </li>
                         <li class="nav-item">
