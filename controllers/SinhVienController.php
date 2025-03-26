@@ -29,16 +29,25 @@ class SinhVienController {
     }
 
     public function create() {
+        require_once 'views/sinhvien/create.php';
+    }
+
+    public function store() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $maSV = $_POST['maSV'];
             $hoTen = $_POST['hoTen'];
             $gioiTinh = $_POST['gioiTinh'];
             $ngaySinh = $_POST['ngaySinh'];
+            $maNganh = $_POST['maNganh'];
             
             // Xử lý upload ảnh
             $hinh = '';
             if (isset($_FILES['hinh']) && $_FILES['hinh']['error'] === 0) {
                 $uploadDir = 'img/';
+                if (!file_exists($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+                
                 $fileExtension = pathinfo($_FILES['hinh']['name'], PATHINFO_EXTENSION);
                 $fileName = time() . '_' . $maSV . '.' . $fileExtension;
                 $uploadFile = $uploadDir . $fileName;
@@ -47,8 +56,6 @@ class SinhVienController {
                     $hinh = $fileName;
                 }
             }
-
-            $maNganh = $_POST['maNganh'];
 
             if ($this->sinhVienModel->addSinhVien($maSV, $hoTen, $gioiTinh, $ngaySinh, $hinh, $maNganh)) {
                 $_SESSION['message'] = 'Thêm sinh viên thành công!';
@@ -60,7 +67,8 @@ class SinhVienController {
             header('Location: index.php?controller=sinhvien&action=index');
             exit;
         }
-        require_once 'views/sinhvien/create.php';
+        header('Location: ' . $_SERVER['HTTP_REFERER']);
+        exit;
     }
 
     public function edit($maSV) {
@@ -88,6 +96,10 @@ class SinhVienController {
 
                 // Upload ảnh mới
                 $uploadDir = 'img/';
+                if (!file_exists($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+
                 $fileExtension = pathinfo($_FILES['hinh']['name'], PATHINFO_EXTENSION);
                 $fileName = time() . '_' . $maSV . '.' . $fileExtension;
                 $uploadFile = $uploadDir . $fileName;
